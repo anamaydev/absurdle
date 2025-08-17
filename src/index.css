@@ -60,3 +60,15 @@
     @apply bg-black-900 text-gray-50;
   }
 }
+
+/* clip-path for mobile screen */
+.clip-trapezoid-mobile {
+  clip-path: url(#trapezoid-mobile);
+}
+
+/* clip path for desktop screen */
+@media (min-width: 768px) {
+  .md\:clip-trapezoid-desktop {
+    clip-path: url(#trapezoid-desktop);
+  }
+}
