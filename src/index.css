@@ -7,6 +7,14 @@
 }
 
 @font-face {
+  font-family: "Roboto";
+  src: url("./assets/fonts/Roboto-Regular.ttf") format("truetype");
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+}
+
+@font-face {
   font-family: "Lobster";
   src: url("./assets/fonts/Lobster-Regular.ttf") format("truetype");
   font-style: normal;
@@ -40,4 +48,15 @@
   --text-md: 1.25rem;    /* 20px */
   --text-xl: 2rem;       /* 32px */
   --text-xxxl: 4rem;     /* 64px */
+  
+  /* custom fonts */
+  --font-roboto: "Roboto", serif;
+  --font-lobster: "Lobster", serif;
+  --font-rhodium-libre: "Rhodium Libre", serif;
+}
+
+@layer base {
+  body{
+    @apply bg-black-900 text-gray-50;
+  }
 }
