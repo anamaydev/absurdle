@@ -19,7 +19,7 @@ const Main = () => {
   const guessRef = useRef(0);
   const letterRef = useRef(0);
 
-  const todaysWord = "table";
+  const todaysWord = "apple";
 
   /* function to set shakeIt to false as soon as the animation ends using onAnimationEnd */
   const resetShakeAnimation = (index:number) => {
@@ -30,20 +30,59 @@ const Main = () => {
     })
   }
 
+  const compareWords = (index:number, tempGuessArray: GuessArrayType[]) => {
+    const word = tempGuessArray[index].word.split("");
+    const wordMap = new Map();
+    const result:number[] = [];
+
+    todaysWord.split("").forEach(letter => {
+      if(!wordMap.has(letter)) wordMap.set(letter, 1);
+      else wordMap.set(letter, wordMap.get(letter)+1);
+    })
+
+    todaysWord.split("").forEach((letter: string, idx: number) => {
+      if(letter === word[idx]){
+        result.push(1);
+      }else if(letter != word[idx]){
+        if(wordMap.has(word[idx])){             /* check if the letter is in the Map */
+          if(wordMap.get(word[idx]) === 1) {    /* if the letter exist and frequency is 1, then delete it from the Map */
+            wordMap.delete(word[idx]);
+            result.push(2);             /* exists but incorrect position */
+          }else {                               /* if the letter exist and frequency is more than 1 then just decrement it by 1 */
+            wordMap.set(word[idx], wordMap.get(word[idx])-1);
+            result.push(2);             /* exists but incorrect position */
+          }
+        }else result.push(-1);          /* letter does not exist */
+      }
+    })
+    // console.log("result: ", result);
+    tempGuessArray[index] = {...tempGuessArray[index], result: result};
+    return tempGuessArray;
+  }
+
   const getKeyStroke = useCallback((event: globalThis.KeyboardEvent)=>{
     setGuessArray(prevGuessArray => {
       const tempGuessArray = [...prevGuessArray];
       if(event.key === "Enter"){
+        /* todo: add game over logic after 6 guesses */
         if(guessRef.current === 5) guessRef.current = 5;
-        else if(tempGuessArray[guessRef.current].word.trim().length <5){
+        if(tempGuessArray[guessRef.current].word.trim().length <5){
           tempGuessArray[guessRef.current] = {      /* set shakeIt as true */
             ...tempGuessArray[guessRef.current],
             shakeIt:true
           };
+          letterRef.current = 0;
           return tempGuessArray;
-        } else guessRef.current = guessRef.current + 1;
-        letterRef.current = 0;
-        return tempGuessArray;
+        } else {
+          const tempGuessArrayWithResult = compareWords(guessRef.current, tempGuessArray);
+          guessRef.current = guessRef.current + 1;
+          letterRef.current = 0;
+          /* TODO: game ended condition after correct guess */
+          return tempGuessArrayWithResult;
+        }
+
+        // letterRef.current = 0;
+        // return tempGuessArray;
       }else if(event.key === "Backspace"){
         if(letterRef.current > 0){
           --letterRef.current; /* go one letter back */
