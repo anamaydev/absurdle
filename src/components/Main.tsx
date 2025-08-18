@@ -28,6 +28,10 @@ const Main = () => {
         if(guessRef.current === 5) guessRef.current = 5;
         else if(tempGuessArray[guessRef.current].word.trim().length <5){
           /* TODO: set some state to indicate incomplete word */
+          tempGuessArray[guessRef.current] = {
+            ...tempGuessArray[guessRef.current],
+            shakeIt: !tempGuessArray[guessRef.current].shakeIt
+          };
           return tempGuessArray;
         } else guessRef.current = guessRef.current + 1;
         letterRef.current = 0;
@@ -71,10 +75,9 @@ const Main = () => {
         {/* grid */}
         <div className="flex flex-col gap-1.5">
           {guessArray.map((guess, index) => (
-              <Word key={index} guess={guess} />
+              <Word key={index} word={guess.word} result={guess.result} isCellBlocked={guess.isCellBlocked} shakeIt={guess.shakeIt} />
           ))}
         </div>
-
       </div>
       {/* keyboard */}
       <div></div>
