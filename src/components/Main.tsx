@@ -21,16 +21,24 @@ const Main = () => {
 
   const todaysWord = "table";
 
+  /* function to set shakeIt to false as soon as the animation ends using onAnimationEnd */
+  const resetShakeAnimation = (index:number) => {
+    setGuessArray(prevGuessArray=>{
+      const copyGuessArray = [...prevGuessArray];
+      copyGuessArray[index] = {...copyGuessArray[index], shakeIt: false}
+      return copyGuessArray;
+    })
+  }
+
   const getKeyStroke = useCallback((event: globalThis.KeyboardEvent)=>{
     setGuessArray(prevGuessArray => {
       const tempGuessArray = [...prevGuessArray];
       if(event.key === "Enter"){
         if(guessRef.current === 5) guessRef.current = 5;
         else if(tempGuessArray[guessRef.current].word.trim().length <5){
-          /* TODO: set some state to indicate incomplete word */
-          tempGuessArray[guessRef.current] = {
+          tempGuessArray[guessRef.current] = {      /* set shakeIt as true */
             ...tempGuessArray[guessRef.current],
-            shakeIt: !tempGuessArray[guessRef.current].shakeIt
+            shakeIt:true
           };
           return tempGuessArray;
         } else guessRef.current = guessRef.current + 1;
@@ -75,7 +83,14 @@ const Main = () => {
         {/* grid */}
         <div className="flex flex-col gap-1.5">
           {guessArray.map((guess, index) => (
-              <Word key={index} word={guess.word} result={guess.result} isCellBlocked={guess.isCellBlocked} shakeIt={guess.shakeIt} />
+              <Word
+                key={index}
+                word={guess.word}
+                result={guess.result}
+                isCellBlocked={guess.isCellBlocked}
+                shakeIt={guess.shakeIt}
+                onShakeEnd={()=>resetShakeAnimation(index)}
+              />
           ))}
         </div>
       </div>
