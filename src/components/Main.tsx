@@ -6,6 +6,7 @@ type GuessArrayType = {
   result: number[],
   isCellBlocked: boolean,
   shakeIt: boolean,
+  reveal: boolean,
 }
 
 const Main = () => {
@@ -14,6 +15,7 @@ const Main = () => {
     result: new Array(5).fill(0),
     isCellBlocked: false,
     shakeIt: false,
+    reveal: false,
   })))
 
   const guessRef = useRef(0);
@@ -32,31 +34,38 @@ const Main = () => {
 
   const compareWords = (index:number, tempGuessArray: GuessArrayType[]) => {
     const word = tempGuessArray[index].word.split("");
+    const todaysWordArray = todaysWord.split("");
     const wordMap = new Map();
-    const result:number[] = [];
+    const result = new Array(5).fill(0);
 
-    todaysWord.split("").forEach(letter => {
+    todaysWordArray.forEach(letter => {
       if(!wordMap.has(letter)) wordMap.set(letter, 1);
       else wordMap.set(letter, wordMap.get(letter)+1);
     })
 
-    todaysWord.split("").forEach((letter: string, idx: number) => {
-      if(letter === word[idx]){
-        result.push(1);
-      }else if(letter != word[idx]){
-        if(wordMap.has(word[idx])){             /* check if the letter is in the Map */
-          if(wordMap.get(word[idx]) === 1) {    /* if the letter exist and frequency is 1, then delete it from the Map */
-            wordMap.delete(word[idx]);
-            result.push(2);             /* exists but incorrect position */
-          }else {                               /* if the letter exist and frequency is more than 1 then just decrement it by 1 */
-            wordMap.set(word[idx], wordMap.get(word[idx])-1);
-            result.push(2);             /* exists but incorrect position */
-          }
-        }else result.push(-1);          /* letter does not exist */
-      }
+    const incorrectLetters: number[] = todaysWordArray.reduce((acc, letter, idx)=>{
+      if(letter === word[idx]) {
+        if (wordMap.get(word[idx]) === 1) wordMap.delete(word[idx]);   /* if the letter exist and frequency is 1, then delete it from the Map */
+        else wordMap.set(word[idx], wordMap.get(word[idx]) - 1);       /* if the letter exist and frequency is more than 1 then just decrement it by 1 */
+        result[idx] = 1;
+      }else acc.push(idx); /* only push the index of incorrect letters */
+      return acc;
+    },[] as number[])
+
+    incorrectLetters.forEach(idx=> {
+      if(wordMap.has(word[idx])){             /* check if the letter is in the Map */
+        if(wordMap.get(word[idx]) === 1) {    /* if the letter exist and frequency is 1, then delete it from the Map */
+          wordMap.delete(word[idx]);
+          result[idx] = 2;                    /* exists but incorrect position */
+        }else {                               /* if the letter exist and frequency is more than 1 then just decrement it by 1 */
+          wordMap.set(word[idx], wordMap.get(word[idx])-1);
+          result[idx] = 2;                    /* exists but incorrect position */
+        }
+      }else result[idx]= -1;                  /* letter does not exist */
     })
-    // console.log("result: ", result);
-    tempGuessArray[index] = {...tempGuessArray[index], result: result};
+
+    tempGuessArray[index] = {...tempGuessArray[index], result: result, reveal: true};
+    /* TODO: set game finished flag if the guess is correct */
     return tempGuessArray;
   }
 
@@ -128,6 +137,7 @@ const Main = () => {
                 result={guess.result}
                 isCellBlocked={guess.isCellBlocked}
                 shakeIt={guess.shakeIt}
+                reveal={guess.reveal}
                 onShakeEnd={()=>resetShakeAnimation(index)}
               />
           ))}
@@ -138,4 +148,5 @@ const Main = () => {
     </main>
   )
 }
-export default Main
+
+export default Main;
