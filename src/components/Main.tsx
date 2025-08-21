@@ -17,6 +17,7 @@ const Main = () => {
     shakeIt: false,
     reveal: false,
   })))
+  const [isGameOver, setIsGameOver] = useState<boolean>(false);
 
   const guessRef = useRef(0);
   const letterRef = useRef(0);
@@ -72,9 +73,14 @@ const Main = () => {
   const getKeyStroke = useCallback((event: globalThis.KeyboardEvent)=>{
     setGuessArray(prevGuessArray => {
       const tempGuessArray = [...prevGuessArray];
+
+      /* todo: add game over logic after 6 guesses */
+      if(guessRef.current > 5) {
+        setIsGameOver(true); /* game over flag */
+        return tempGuessArray;
+      }
+
       if(event.key === "Enter"){
-        /* todo: add game over logic after 6 guesses */
-        if(guessRef.current === 5) guessRef.current = 5;
         if(tempGuessArray[guessRef.current].word.trim().length <5){
           tempGuessArray[guessRef.current] = {      /* set shakeIt as true */
             ...tempGuessArray[guessRef.current],
@@ -82,16 +88,13 @@ const Main = () => {
           };
           letterRef.current = 0;
           return tempGuessArray;
-        } else {
+        }else {
           const tempGuessArrayWithResult = compareWords(guessRef.current, tempGuessArray);
           guessRef.current = guessRef.current + 1;
           letterRef.current = 0;
           /* TODO: game ended condition after correct guess */
           return tempGuessArrayWithResult;
         }
-
-        // letterRef.current = 0;
-        // return tempGuessArray;
       }else if(event.key === "Backspace"){
         if(letterRef.current > 0){
           --letterRef.current; /* go one letter back */
@@ -111,9 +114,10 @@ const Main = () => {
   },[])
 
   useEffect(() => {
-    window.addEventListener("keydown",getKeyStroke);
+    /* only add event listener if the isGameOver flag is false */
+    if(!isGameOver) window.addEventListener("keydown",getKeyStroke);
     return () => window.removeEventListener("keydown", getKeyStroke);
-  }, [getKeyStroke]);
+  }, [getKeyStroke, isGameOver]);
 
   useEffect(() => {
     console.log("GuessArray", guessArray);
