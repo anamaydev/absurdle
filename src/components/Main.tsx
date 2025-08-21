@@ -86,7 +86,6 @@ const Main = () => {
             ...tempGuessArray[guessRef.current],
             shakeIt:true
           };
-          letterRef.current = 0;
           return tempGuessArray;
         }else {
           const tempGuessArrayWithResult = compareWords(guessRef.current, tempGuessArray);
