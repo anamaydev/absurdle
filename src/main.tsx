@@ -1,9 +1,10 @@
-import { StrictMode } from 'react'
+// import { StrictMode } from 'react'
 import { createRoot } from 'react-dom/client'
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import './index.css'
 import Login from "./pages/Login.tsx";
 import Game from "./pages/Game.tsx";
+import AuthProvider from './contexts/AuthProvider.tsx';
 
 const router = createBrowserRouter([
   {
@@ -18,6 +19,8 @@ const router = createBrowserRouter([
 
 createRoot(document.getElementById('root')!).render(
   // <StrictMode>
+  <AuthProvider>
     <RouterProvider router={router}/>
+  </AuthProvider>
   // </StrictMode>,
 )
