@@ -44,12 +44,16 @@ const AuthProvider = ({children}: {children: ReactNode}) => {
   },[user])
 
   useEffect(()=>{
-    console.log("user: ", user);
+    if(process.env.NODE_ENV === "development"){
+      console.log("user: ", user);
+    }
   },[user]);
 
   useEffect(()=>{
-    console.log("4LW: ", fourLetterWords);
-    console.log("5LW: ", fiveLetterWords);
+    if (process.env.NODE_ENV === 'development'){
+      console.log("4LW: ", fourLetterWords);
+      console.log("5LW: ", fiveLetterWords);
+    }
   },[fourLetterWords, fiveLetterWords])
 
   return (

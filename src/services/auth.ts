@@ -2,7 +2,6 @@ import { signInWithPopup, signOut, GoogleAuthProvider, type UserCredential } fro
 import { auth, db } from "../lib/firebase";
 import { doc, getDoc} from "firebase/firestore";
 
-
 export function signInWithGoogle(): Promise<UserCredential>{
   const provider = new GoogleAuthProvider;
   return signInWithPopup(auth, provider);
@@ -21,7 +20,7 @@ export async function getFourLetterWords(): Promise<string[]>{
     return data.words;
   }else{
     console.log("Document not found!");
-    return[];
+    return [];
   }
 }
 
@@ -34,6 +33,6 @@ export async function getFiveLetterWords(): Promise<string[]>{
     return data.words;
   }else{
     console.log("Document not found!");
-    return[]
+    return [];
   }
 }
