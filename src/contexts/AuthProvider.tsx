@@ -16,7 +16,11 @@ const AuthProvider = ({children}: {children: ReactNode}) => {
     })
 
     return () => unsubscribe();
-  },[])
+  },[]);
+
+  useEffect(()=>{
+    console.log("user: ", user);
+  },[user]);
 
   return (
     <AuthContext.Provider value={{user, userLoading ,signInWithGoogle, logOut}}>

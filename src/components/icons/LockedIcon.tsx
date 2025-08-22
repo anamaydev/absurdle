@@ -1,4 +1,4 @@
-const LockedIcon = ({className}:{className: string}) => {
+const LockedIcon = ({className}:{className?: string}) => {
   return (
     <svg className={className} width="52" height="52" viewBox="0 0 52 52" fill="none" xmlns="http://www.w3.org/2000/svg">
       <rect y="0.5" width="52" height="52" rx="12" fill="#C02F21"/>
