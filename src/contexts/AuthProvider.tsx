@@ -22,6 +22,7 @@ const AuthProvider = ({children}: {children: ReactNode}) => {
 
   /* fetch all the words */
   useEffect(()=>{
+    if(!user) return;
     const fetchAllWords = async () => {
       try {
         const [fourLetterWordsData, fiveLetterWordsData] = await Promise.all([
@@ -36,7 +37,7 @@ const AuthProvider = ({children}: {children: ReactNode}) => {
     }
 
     fetchAllWords();
-  },[])
+  },[user])
 
   useEffect(()=>{
     console.log("user: ", user);
