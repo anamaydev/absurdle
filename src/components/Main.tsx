@@ -33,7 +33,7 @@ const Main = () => {
     })
   }
 
-  const compareWords = (index:number, tempGuessArray: GuessArrayType[]) => {
+  const wordValidation = (index:number, tempGuessArray: GuessArrayType[]) => {
     const word = tempGuessArray[index].word.split("");
     const todaysWordArray = todaysWord.split("");
     const wordMap = new Map();
@@ -88,7 +88,7 @@ const Main = () => {
           };
           return tempGuessArray;
         }else {
-          const tempGuessArrayWithResult = compareWords(guessRef.current, tempGuessArray);
+          const tempGuessArrayWithResult = wordValidation(guessRef.current, tempGuessArray);
           guessRef.current = guessRef.current + 1;
           letterRef.current = 0;
           /* TODO: game ended condition after correct guess */
