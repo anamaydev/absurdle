@@ -8,6 +8,7 @@ type AuthContextType = {
   logOut: () => Promise<void>,
   fourLetterWords: string[] | null,
   fiveLetterWords: string[] | null,
+  wordListLoading: boolean
 }
 
 export const AuthContext = createContext<AuthContextType | undefined>(undefined);

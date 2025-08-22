@@ -9,6 +9,7 @@ const AuthProvider = ({children}: {children: ReactNode}) => {
   const [userLoading, setUserLoading] = useState(true);
   const [fiveLetterWords, setFiveLetterWords] = useState<string[] | null>(null);
   const [fourLetterWords, setFourLetterWords] = useState<string[] | null>(null);
+  const [wordListLoading, setWordListLoading] = useState<boolean>(false);
 
   /* track user login/logout activity using listner */
   useEffect(()=>{
@@ -23,6 +24,7 @@ const AuthProvider = ({children}: {children: ReactNode}) => {
   /* fetch all the words */
   useEffect(()=>{
     if(!user) return;
+    setWordListLoading(true);
     const fetchAllWords = async () => {
       try {
         const [fourLetterWordsData, fiveLetterWordsData] = await Promise.all([
@@ -33,6 +35,8 @@ const AuthProvider = ({children}: {children: ReactNode}) => {
         setFiveLetterWords(fiveLetterWordsData);
       } catch (err) {
         console.error(err)
+      }finally{
+        setWordListLoading(false)
       }
     }
 
@@ -49,7 +53,7 @@ const AuthProvider = ({children}: {children: ReactNode}) => {
   },[fourLetterWords, fiveLetterWords])
 
   return (
-    <AuthContext.Provider value={{user, userLoading ,signInWithGoogle, logOut, fourLetterWords, fiveLetterWords}}>
+    <AuthContext.Provider value={{user, userLoading ,signInWithGoogle, logOut, fourLetterWords, fiveLetterWords, wordListLoading}}>
       {children}
     </AuthContext.Provider>
   )
