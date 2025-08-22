@@ -1,7 +1,17 @@
+import { useNavigate } from "react-router-dom";
+import { useAuthContext } from "../contexts/useAuthContext";
 import LockedIcon from "./icons/LockedIcon";
 import Logo from "./icons/Logo";
 
 const Navbar = () => {
+  const navigate = useNavigate();
+  const {logOut} = useAuthContext();
+
+  function signOut(){
+    logOut();
+    navigate("/login");
+  }
+
   return (
     <header>
       <svg width="0" height="0" style={{ position: 'absolute' }}>
@@ -30,7 +40,10 @@ const Navbar = () => {
           <LockedIcon className={"h-8 w-8 md:hidden"}/>
           <Logo className={"hidden md:block"}/>
         </div>
-        <p className="basis-20 shrink-0 grow-0 text-start hover:text-white transform transition-colors duration-300">Log out</p>
+        <button 
+          className="basis-20 shrink-0 grow-0 text-start cursor-pointer hover:text-white transform transition-colors duration-300"
+          onClick={signOut}
+        >Log out</button>
       </nav>
     </header>
   )
