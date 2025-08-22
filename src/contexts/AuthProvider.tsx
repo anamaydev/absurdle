@@ -1,12 +1,14 @@
 import { useEffect, useState, type ReactNode } from "react";
 import { AuthContext } from "./AuthContext";
-import { signInWithGoogle, logOut } from "../services/auth";
+import { signInWithGoogle, logOut, getFourLetterWords, getFiveLetterWords } from "../services/auth";
 import { onAuthStateChanged, type User } from "firebase/auth";
 import { auth } from "../lib/firebase";
 
 const AuthProvider = ({children}: {children: ReactNode}) => {
   const [user, setUser] = useState<User | null>(null);
   const [userLoading, setUserLoading] = useState(true);
+  const [fiveLetterWords, setFiveLetterWords] = useState<string[] | null>(null);
+  const [fourLetterWords, setFourLetterWords] = useState<string[] | null>(null);
 
   /* track user login/logout activity using listner */
   useEffect(()=>{
@@ -18,12 +20,35 @@ const AuthProvider = ({children}: {children: ReactNode}) => {
     return () => unsubscribe();
   },[]);
 
+  /* fetch all the words */
+  useEffect(()=>{
+    const fetchAllWords = async () => {
+      try {
+        const [fourLetterWordsData, fiveLetterWordsData] = await Promise.all([
+          getFourLetterWords(),
+          getFiveLetterWords()
+        ])
+        setFourLetterWords(fourLetterWordsData);
+        setFiveLetterWords(fiveLetterWordsData);
+      } catch (err) {
+        console.error(err)
+      }
+    }
+
+    fetchAllWords();
+  },[])
+
   useEffect(()=>{
     console.log("user: ", user);
   },[user]);
 
+  useEffect(()=>{
+    console.log("4LW: ", fourLetterWords);
+    console.log("5LW: ", fiveLetterWords);
+  },[fourLetterWords, fiveLetterWords])
+
   return (
-    <AuthContext.Provider value={{user, userLoading ,signInWithGoogle, logOut}}>
+    <AuthContext.Provider value={{user, userLoading ,signInWithGoogle, logOut, fourLetterWords, fiveLetterWords}}>
       {children}
     </AuthContext.Provider>
   )

@@ -5,7 +5,9 @@ type AuthContextType = {
   user: User | null,
   userLoading: boolean, 
   signInWithGoogle: () => Promise<UserCredential>,
-  logOut: () => Promise<void>
+  logOut: () => Promise<void>,
+  fourLetterWords: string[] | null,
+  fiveLetterWords: string[] | null,
 }
 
 export const AuthContext = createContext<AuthContextType | undefined>(undefined);
